@@ -78,6 +78,10 @@
                         <input type="text" class="form-control" id="scrape-input" name="scrape-input" placeholder="Enter scrape-input" required>
                     </div>
 
+                    <h4>Note:</h4>
+                    <p>After you click scrape a testing selenium chrome driver will start so you will see a new chrome window open. </p>
+                    <p>You need that to be visible for you to deal with when linkedin require a captcha or a security check.</p>
+
 
 
                     <br>
@@ -96,6 +100,23 @@
 
 document.getElementById('scrape-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Stop submitting like usual
+            const scrapeInput = document.getElementById('username').value;
+
+
+            fetch('/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.text())
+            .then(data => {
+
+        
+
+            })
+            .catch(error => {});
 
           
         });

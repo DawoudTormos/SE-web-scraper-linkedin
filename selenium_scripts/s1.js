@@ -2,15 +2,18 @@ const SEL = require('selenium-webdriver');
 
 
 
-(async function example() {
+ const s1 = async function () {
 
 
-    let driver = await new SEL.Builder().forBrowser('chrome').build();
+    let driver =  await new SEL.Builder().forBrowser('chrome').build();
 
 
     try {
 
-        await driver.get('https://www.linkedin.com/');
+         await driver.get('https://google.com');
+
+    }catch{
+
 
     } finally {
 
@@ -19,4 +22,8 @@ const SEL = require('selenium-webdriver');
     }
 
 
-})();
+};
+
+
+export {s1}
+ 

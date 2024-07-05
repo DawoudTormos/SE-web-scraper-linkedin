@@ -1,3 +1,4 @@
+const SEL = require('selenium-webdriver');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -51,6 +52,29 @@ app.post('/submit-creds', (req, res) => {
 
 
 
+app.post('/scrape', (req, res) => {
+
+
+
+     try {
+        s1();
+
+        res.send('Form submitted successfully!');
+
+
+     } catch (error) {
+
+
+
+
+     }
+
+
+
+});
+
+
+
 
 
 app.get('/check-creds', (req, res) => {
@@ -81,3 +105,32 @@ app.get('/check-creds', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+
+
+
+
+
+
+const s1 = async function () {
+
+
+    let driver =  await new SEL.Builder().forBrowser('chrome').build();
+
+
+    try {
+
+         await driver.get('https://google.com');
+
+    }catch{
+
+
+    } finally {
+
+       // await driver.quit();
+       
+    }
+
+
+};

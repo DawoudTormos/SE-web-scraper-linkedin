@@ -1,6 +1,7 @@
 {
   "name": "web-scraper",
   "version": "1.0.0",
+  "author":"dawoud",
   "description": "A linkedin web scrapper for SE",
   "main": "index.js",
   "scripts": {
