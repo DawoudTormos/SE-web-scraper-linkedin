@@ -16,10 +16,10 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
-                Enter/Update Credentials for linkedIn
+                Enter/Update Credentials for linkedIn.
             </div>
             <div class="card-body">
-                <form id="creds"  action="/submit-creds" method="POST">
+                <form id="creds-form"  action="/submit-creds" method="POST">
 
                     <div class="form-group">
                         <label for="username">Username</label>
@@ -28,7 +28,7 @@
 
                     <div class="form-group">
                         <label for="password">password</label>
-                        <input type="text" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                     </div>
 
                     <br>
@@ -38,6 +38,9 @@
             </div>
         </div>
     </div>
+
+
+
 
 
 
@@ -62,14 +65,44 @@
 
 
 
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                Scrape
+            </div>
+            <div class="card-body">
+                <form id="scrape-form"  action="/scrape" method="POST">
 
+                    <div class="form-group">
+                        <label for="scrape-input">Input to scrape with:</label>
+                        <input type="text" class="form-control" id="scrape-input" name="scrape-input" placeholder="Enter scrape-input" required>
+                    </div>
+
+
+
+                    <br>
+
+                    <button type="submit" class="btn btn-primary">Scrape</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 
 
     <script>
 
-        document.getElementById('creds').addEventListener('submit', function(event) {
+
+document.getElementById('scrape-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop submitting like usual
+
+          
+        });
+
+
+
+        document.getElementById('creds-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Stop submitting like usual
 
             const username = document.getElementById('username').value;
@@ -89,6 +122,13 @@
                 const text =  document.querySelector('#cred-exists  > div span') 
                 text.innerHTML = "Credentials Added"
                 alert.classList.remove('d-none') 
+
+                const inputs =  document.querySelectorAll('#creds-form input ') 
+                inputs.forEach((i)=>{
+                    i.value = ""
+                }
+            )
+
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -99,6 +139,7 @@
 
 
         });
+        
 
 
 
