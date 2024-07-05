@@ -57,7 +57,7 @@
 <!---   Displays errors-->
 <div class="container mt-5" id="alert">
     <div  class="alert alert-danger alert-dismissible fade show d-none" role="alert">
-        <span><strong>Credentials</strong> found already. No need to re-enter them.</span>
+        <span><strong>Credentials</strong> </span>
         <button type="button" class="btn-close close" onclick="document.querySelector('#alert  > div').classList.add('d-none')">X</button>
       </div>
 
@@ -100,21 +100,18 @@
 
 document.getElementById('scrape-form').addEventListener('submit', function(event) {
             event.preventDefault(); // Stop submitting like usual
-            const scrapeInput = document.getElementById('username').value;
-
+            const scrapeInput = document.getElementById('scrape-input').value;
+                
 
             fetch('/scrape', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ searchTitle : scrapeInput })
             })
             .then(response => response.text())
             .then(data => {
-
-        
-
             })
             .catch(error => {});
 
@@ -143,6 +140,9 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
                 const text =  document.querySelector('#cred-exists  > div span') 
                 text.innerHTML = "Credentials Added"
                 alert.classList.remove('d-none') 
+
+                const alert2 =  document.querySelector('#alert > div') 
+                alert2.classList.add('d-none') 
 
                 
                 const scrapeBtn =  document.querySelector('#scrape-btn') 
@@ -186,12 +186,18 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
 
                     } else {
                         console.log('Credentials file does not exist.');
-                        alert('Credentials file does not exist.');
-                    }
+
+                        const text =  document.querySelector('#alert > div span') 
+                        text.innerHTML = "Credentials not added yet"
+
+                        const alert =  document.querySelector('#alert > div') 
+                        alert.classList.remove('d-none') 
+
+            }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    const alert =  document.querySelector('#alert  > div')
+                console.error('Error:', error);
+                const alert =  document.querySelector('#alert  > div')
                 const text =  document.querySelector('#alert > div span') 
                 text.innerHTML = 'Error:'+ error
                 alert.classList.remove('d-none') 
