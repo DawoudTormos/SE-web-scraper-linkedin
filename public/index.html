@@ -48,7 +48,7 @@
 
     <div class="container mt-5" id="cred-exists">
     <div  class="alert alert-info alert-dismissible fade show d-none" role="alert">
-        <span><strong>Credentials</strong> found already. No need to re-enter them.</span>
+        <span><strong>Credentials</strong> found already. No need to re-enter them if not changed.</span>
         <button type="button" class="btn-close close" onclick="document.querySelector('#cred-exists  > div').classList.add('d-none')">X</button>
       </div>
 
@@ -80,13 +80,13 @@
 
                     <h4>Note:</h4>
                     <p>After you click scrape a testing selenium chrome driver will start so you will see a new chrome window open. </p>
-                    <p>You need that to be visible for you to deal with when linkedin require a captcha or a security check.</p>
+                    <p>You need that to be visible for you to deal with when linkedin require a captcha or a security check. Surpassing this in any other way will need some kind of AI and machine learning.</p>
 
 
 
                     <br>
 
-                    <button type="submit" class="btn btn-primary">Scrape</button>
+                    <button type="submit" class="btn btn-primary" id="scrape-btn" disabled>Scrape</button>
                 </form>
             </div>
         </div>
@@ -144,6 +144,10 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
                 text.innerHTML = "Credentials Added"
                 alert.classList.remove('d-none') 
 
+                
+                const scrapeBtn =  document.querySelector('#scrape-btn') 
+                scrapeBtn.removeAttribute("disabled");
+
                 const inputs =  document.querySelectorAll('#creds-form input ') 
                 inputs.forEach((i)=>{
                     i.value = ""
@@ -165,6 +169,8 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
 
 
 
+
+
         function checkCredentialsFile() {
             fetch('/check-creds')
                 .then(response => response.json())
@@ -174,6 +180,9 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
 
                         const alert =  document.querySelector('#cred-exists > div') 
                         alert.classList.remove('d-none') 
+
+                        const scrapeBtn =  document.querySelector('#scrape-btn') 
+                        scrapeBtn.removeAttribute("disabled");
 
                     } else {
                         console.log('Credentials file does not exist.');

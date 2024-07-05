@@ -1,4 +1,5 @@
 const SEL = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -7,6 +8,18 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 888;
+
+
+
+const userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.199 Safari/537.36";
+
+let credentials;
+
+let options = new chrome.Options();
+options.addArguments(`--user-agent=${userAgent}`);
+
+
+
 
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -26,11 +39,13 @@ app.get('/', (req, res) => {
 app.post('/submit-creds', (req, res) => {
     const user = req.body.username;
     const pass = req.body.password;
-    const credentials = [ user , pass ];
+    const creds = [ user , pass ];
+
+    credentials = [...creds]// keeping the new credentials in memory after updating the files
 
     const dirPath = path.join(__dirname, 'credentials');
     const filePath = path.join(dirPath, './credentials.json');
-    const json = { credentials: [credentials] };
+    const json = { credentials: [...creds] };
 
      fs.mkdirSync(dirPath, { recursive: true });
 
@@ -84,6 +99,7 @@ app.get('/check-creds', (req, res) => {
         if (fs.existsSync(filePath)) {
             const data = fs.readFileSync(filePath, 'utf8');
             const json = JSON.parse(data);
+            credentials = json.credentials ;
             res.json({ exists: true, credentials: json.credentials });
         } else {
             res.json({ exists: false });
@@ -113,22 +129,31 @@ app.listen(PORT, () => {
 
 
 
+
+
+
+
+
+
 const s1 = async function () {
 
-
-    let driver =  await new SEL.Builder().forBrowser('chrome').build();
-
+    let driver =  await new SEL.Builder().forBrowser('chrome').setChromeOptions(options).build();
 
     try {
 
-         await driver.get('https://google.com');
+         await driver.get('https://www.linkedin.com/login');
+
+         await driver.findElement(By.name('username')).sendKeys(credentials);
+         await driver.findElement(By.name('password')).sendKeys('your_password');
+
+         await driver.findElement(By.id('form_id')).submit();
 
     }catch{
 
 
     } finally {
 
-       // await driver.quit();
+        //await driver.quit();
        
     }
 
