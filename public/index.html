@@ -17,7 +17,7 @@
                 Enter Credentials
             </div>
             <div class="card-body">
-                <form id="jobForm"  action="/submit-creds" method="POST">
+                <form id="creds"  action="/submit-creds" method="POST">
 
                     <div class="form-group">
                         <label for="username">Username</label>
@@ -36,6 +36,65 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+    <script>
+
+        document.getElementById('creds').addEventListener('submit', function(event) {
+            event.preventDefault(); // Stop submitting like usual
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/submit-creds', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                alert('Form submitted successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the form.');
+            });
+
+
+        });
+
+
+
+
+        function checkCredentialsFile() {
+            fetch('/check-creds')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        console.log('Credentials file exists:', data.credentials);
+                        alert('Credentials file exists and retrieved successfully!');
+                    } else {
+                        console.log('Credentials file does not exist.');
+                        alert('Credentials file does not exist.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while checking for the credentials file.');
+                });
+        }
+
+        // Optionally, call checkCredentialsFile on page load or based on some event
+        window.onload = checkCredentialsFile;
+    </script>
+
 
 
 

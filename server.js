@@ -46,8 +46,34 @@ app.post('/submit-creds', (req, res) => {
 
      }
 
-     
+
 });
+
+
+
+
+
+app.get('/check-creds', (req, res) => {
+    const filePath = path.join(__dirname, 'credentials', 'credentials.json');
+
+    try {
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath, 'utf8');
+            const json = JSON.parse(data);
+            res.json({ exists: true, credentials: json.credentials });
+        } else {
+            res.json({ exists: false });
+        }
+    } catch (error) {
+        console.error('Error checking credentials file:', error);
+        res.status(500).send('An error occurred while checking for the credentials file.');
+    }
+
+    
+});
+
+
+
 
 
 
