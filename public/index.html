@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap Card Form</title>
     <link href="./libs/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script src="libs/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
@@ -14,7 +16,7 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
-                Enter Credentials
+                Enter/Update Credentials for linkedIn
             </div>
             <div class="card-body">
                 <form id="creds"  action="/submit-creds" method="POST">
@@ -41,6 +43,29 @@
 
 
 
+    <div class="container mt-5" id="cred-exists">
+    <div  class="alert alert-info alert-dismissible fade show d-none" role="alert">
+        <span><strong>Credentials</strong> found already. No need to re-enter them.</span>
+        <button type="button" class="btn-close close" onclick="document.querySelector('#cred-exists  > div').classList.add('d-none')">X</button>
+      </div>
+
+</div>
+
+<!---   Displays errors-->
+<div class="container mt-5" id="alert">
+    <div  class="alert alert-danger alert-dismissible fade show d-none" role="alert">
+        <span><strong>Credentials</strong> found already. No need to re-enter them.</span>
+        <button type="button" class="btn-close close" onclick="document.querySelector('#alert  > div').classList.add('d-none')">X</button>
+      </div>
+
+</div>
+
+
+
+
+
+
+
 
     <script>
 
@@ -60,12 +85,17 @@
             .then(response => response.text())
             .then(data => {
                 console.log(data);
-                alert('Form submitted successfully!');
+                const alert =  document.querySelector('#cred-exists  > div')
+                const text =  document.querySelector('#cred-exists  > div span') 
+                text.innerHTML = "Credentials Added"
+                alert.classList.remove('d-none') 
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while submitting the form.');
-            });
+                const alert =  document.querySelector('#alert  > div')
+                const text =  document.querySelector('#alert > div span') 
+                text.innerHTML = 'Error:'+ error
+                alert.classList.remove('d-none')             });
 
 
         });
@@ -79,7 +109,10 @@
                 .then(data => {
                     if (data.exists) {
                         console.log('Credentials file exists:', data.credentials);
-                        alert('Credentials file exists and retrieved successfully!');
+
+                        const alert =  document.querySelector('#cred-exists > div') 
+                        alert.classList.remove('d-none') 
+
                     } else {
                         console.log('Credentials file does not exist.');
                         alert('Credentials file does not exist.');
@@ -87,11 +120,14 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while checking for the credentials file.');
+                    const alert =  document.querySelector('#alert  > div')
+                const text =  document.querySelector('#alert > div span') 
+                text.innerHTML = 'Error:'+ error
+                alert.classList.remove('d-none') 
                 });
         }
 
-        // Optionally, call checkCredentialsFile on page load or based on some event
+
         window.onload = checkCredentialsFile;
     </script>
 
