@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Card Form</title>
+    <link href="./libs/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                Enter Credentials
+            </div>
+            <div class="card-body">
+                <form id="jobForm">
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">password</label>
+                        <input type="text" class="form-control" id="password" name="password" placeholder="Enter password" required>
+                    </div>
+
+                    <br>
+                    
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        document.getElementById('jobForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const jobTitle = document.getElementById('jobTitle').value;
+            console.log('Job Title:', jobTitle);
+        });
+    </script>
+</body>
+</html>
