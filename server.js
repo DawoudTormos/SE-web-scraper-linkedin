@@ -24,7 +24,7 @@ options.addArguments('--disable-webrtc');  // To avoid STUN errors
 options.addArguments('--log-level=3'); 
 
 
-let searchTitle;
+let searchTitle,geoId;
 
 
 
@@ -76,6 +76,8 @@ app.post('/scrape', async(req, res) => {
     let driver =  await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
       searchTitle = req.body.searchTitle;
+      geoId =   req.body.geoId;
+      console.log(req.body)
 
       res.send('Request Reached node server. Selenium should have started');
 
@@ -87,7 +89,7 @@ app.post('/scrape', async(req, res) => {
 
         await startScraping(driver);
 
-        await getInfo(driver);
+        await scrapePage(driver);
 
 
 
@@ -188,7 +190,7 @@ const startScraping = async  (driver)=> {
     try {
         await console.log(searchTitle);
 
-        await driver.get(`https://www.linkedin.com/jobs/search/?keywords=${searchTitle}&origin=JOB_SEARCH_PAGE_SEARCH_BUTTON`);
+        await driver.get(`https://www.linkedin.com/jobs/search/?keywords=${searchTitle}&geoId=&origin=JOB_SEARCH_PAGE_SEARCH_BUTTON&refresh=true`);
 
 
 
@@ -208,43 +210,102 @@ const startScraping = async  (driver)=> {
 
 
 
-const getInfo = async (driver) => {
+const scrapePage = async (driver) => {
 
     try {
 
         let nbOfJobs = await driver.executeScript(`
-            let pagesArray = [];
-            let nbOfJobs = document.querySelectorAll('.jobs-search-results-list__subtitle > span ');            
+            let nbOfJobs = document.querySelectorAll('.jobs-search-results-list__subtitle > span ')[0].textContent;            
         
 
             return nbOfJobs;
         `);
 
-        console.log(`Number of pages found: ${nbOfProducts}`);
+        console.log(`Number of jobs found: ${extractNumber(nbOfJobs)}`);
 
-        // Fetch children of each page into a 2D array
-       /* let childrenArray = [];
-        for (let page of pages) {
-            let children = await driver.executeScript(`
-                let childrenArray = [];
-                let children = arguments[0].querySelectorAll('.classChildren');
-                for (let child of children) {
-                    childrenArray.push(child);
+
+
+        let res = ()=>{
+
+
+
+            let result = [];
+
+            try {
+                
+        
+                let listItems =  driver.findElements(By.css('.scaffold-layout__list-container > li'));
+        
+                for (let i = 0; i < listItems.length; i++) {
+                    let randomDelay = Math.floor(Math.random() * 1200);
+        
+                    
+                     listItems[i].findElement(By.css('div > div')).click();
+        
+                    
+                     driver.sleep(4000);
+        
+                    let obj = {};
+
+                     let element = driver.findElement(By.css('.scaffold-layout__list-container')); // Replace with your element selector
+
+                    // Scroll to the end of the element
+                     driver.executeScript("arguments[0].scrollTo(arguments[0].scrollHeight;)", element);
+            
+        
+                    try {
+                        // Get the job title
+                        let titleElement =  driver.findElement(By.css('.job-details-jobs-unified-top-card__job-title > h1 > a'));
+                        obj.Title =  titleElement.getText();
+                    } catch (error) {
+                        console.log(error);
+                    } finally {
+                        result.push(obj);
+                    }
+        
+                    // Wait before moving to the next list item
+                     driver.sleep(1200 + randomDelay);
                 }
-                return childrenArray;
-            `, page);
-
-            childrenArray.push(children);
+        
+            } catch (error) {
+                console.error('Error occurred:', error);
+            } finally {
+                console.log(result);
+                 driver.quit();
+            }
+        
+            return result;
         }
 
-        console.log('Children of each page:');
-        console.log(childrenArray);*/
+        console.log("x value: " + res())
+
+
+
 
     } catch (error) {
         console.error('Error occurred:', error);
     } finally {
        // await driver.quit();
+       console.log("x value: " + res())
+
     }
+
+
+
+
+
+    try{
+
+
+
+    }catch(error){
+
+        console.error('Error occurred:', error);
+
+    }
+
+
+
 };
 
 
@@ -280,20 +341,11 @@ const waitUntilUrlIs = async (driver , desiredUrl) => {
 
 
 
-
-
 function extractNumber(str) {
-    // Use a regular expression to find the first occurrence of a sequence of digits
-    let match = str.match(/\d+/);
+    let match = str.match(/[\d,]+/);
 
-    // Return the number as an integer, or null if no match is found
-    return match ? parseInt(match[0], 10) : null;
+    return match ? parseInt(match[0].replace(/,/g, ''), 10) : null;
 }
-
-
-
-
-
 
 
 
