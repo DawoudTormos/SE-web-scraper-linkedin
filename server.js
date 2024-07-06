@@ -73,7 +73,7 @@ app.post('/submit-creds', (req, res) => {
 
 app.post('/scrape', async(req, res) => {
 
-let geoId = "",pagesNb;
+let geoId ,pagesNb;
     let driver =  await new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
 
@@ -90,6 +90,8 @@ let geoId = "",pagesNb;
       pagesNb =   req.body.pagesNb;
       console.log(req.body)
 
+        if (geoId ==""){geoId = "105015875"}
+        
       res.send('Request Reached node server. Selenium should have started');
 
       makeResultDir(searchTitle);
