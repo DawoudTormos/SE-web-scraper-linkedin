@@ -216,11 +216,12 @@ const startScraping = async  (driver)=> {
 
 
 
+
+
+
 const scrapePage = async (driver) => {
 
     try {
-
-
 
 
 
@@ -243,21 +244,48 @@ const scrapePage = async (driver) => {
                     
                     await listItems[i].findElement(By.css('div > div')).click();
         
-                    
-                    await driver.sleep(2000);
-                    await driver.executeScript("let list = document.querySelectorAll('.scaffold-layout__list-container > li');list[24].scrollIntoView();");
+                    // Scroll to the end of the element
+                    if(i<2){await driver.executeScript("let list = document.querySelectorAll('.scaffold-layout__list-container > li');list[24].scrollIntoView();");}
+
+                    //wait page to load
+                     await driver.sleep(2000);
 
         
                     let obj = {};
 
 
-                    // Scroll to the end of the element
+                    
             
         
                     try {
-                        // Get the job title
-                        let titleElement = await driver.findElement(By.css('.job-details-jobs-unified-top-card__job-title > h1 > a'));
-                        obj.Title = await titleElement.getText();
+
+                        let jobId = await listItems[i].findElement(By.css('div > div')).getAttribute('data-job-id'); 
+                        obj.jobId = jobId;
+
+                       
+                        let jobTitle = await driver.findElement(By.css('.job-details-jobs-unified-top-card__job-title > h1 > a'));
+                        obj.jobTitle = await jobTitle.getText();
+
+                        let companyName = await driver.findElement(By.css('.job-details-jobs-unified-top-card__company-name > a'));
+                        obj.companyName = await companyName.getText();
+
+
+                        let jobLocation = await driver.findElement(By.css('.job-details-jobs-unified-top-card__primary-description-container > div > span'));
+                        obj.jobLocation = await jobLocation.getText();
+
+                        let jobDescription = await driver.findElement(By.css('#job-details'));
+                        obj.jobDescription = await jobDescription.getText();
+
+                        let jobPostDate = await driver.findElements(By.css('.job-details-jobs-unified-top-card__primary-description-container > div > span'));
+                        obj.jobPostDate = await jobPostDate[2].getText();
+
+                        let skillsNeeded = await driver.findElement(By.css('.job-details-how-you-match__skills-item-subtitle '));
+                        obj.skillsNeeded = await skillsNeeded.getText();
+
+
+                        let applicationLink = await driver.findElement(By.css('.jobs-apply-button'));
+                        obj.applicationLink = await applicationLink.getText();
+                        
                     } catch (error) {
                         console.log(error);
                     } finally {
