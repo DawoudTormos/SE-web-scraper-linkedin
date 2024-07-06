@@ -86,8 +86,14 @@ app.post('/scrape', async(req, res) => {
         await login(driver);
 
         await waitUntilUrlIs(driver , "https://www.linkedin.com/feed/");
-
         await startScraping(driver);
+
+        let nbOfJobs = await driver.executeScript(`
+            let nbOfJobs = document.querySelectorAll('.jobs-search-results-list__subtitle > span ')[0].textContent;           
+            return nbOfJobs;
+        `);
+        console.log(`Number of jobs found: ${extractNumber(nbOfJobs)}`);
+
 
         await scrapePage(driver);
 
@@ -214,18 +220,11 @@ const scrapePage = async (driver) => {
 
     try {
 
-        let nbOfJobs = await driver.executeScript(`
-            let nbOfJobs = document.querySelectorAll('.jobs-search-results-list__subtitle > span ')[0].textContent;            
-        
-
-            return nbOfJobs;
-        `);
-
-        console.log(`Number of jobs found: ${extractNumber(nbOfJobs)}`);
 
 
 
-        let res = ()=>{
+
+        let res = async()=>{
 
 
 
@@ -234,29 +233,31 @@ const scrapePage = async (driver) => {
             try {
                 
         
-                let listItems =  driver.findElements(By.css('.scaffold-layout__list-container > li'));
-        
+                let listItems = await driver.findElements(By.css('.scaffold-layout__list-container > li'));
+                await driver.sleep(2000);
+                await driver.executeScript("let list = document.querySelectorAll('.scaffold-layout__list-container > li');list[24].scrollIntoView();");
+
                 for (let i = 0; i < listItems.length; i++) {
                     let randomDelay = Math.floor(Math.random() * 1200);
         
                     
-                     listItems[i].findElement(By.css('div > div')).click();
+                    await listItems[i].findElement(By.css('div > div')).click();
         
                     
-                     driver.sleep(4000);
+                    await driver.sleep(2000);
+                    await driver.executeScript("let list = document.querySelectorAll('.scaffold-layout__list-container > li');list[24].scrollIntoView();");
+
         
                     let obj = {};
 
-                     let element = driver.findElement(By.css('.scaffold-layout__list-container')); // Replace with your element selector
 
                     // Scroll to the end of the element
-                     driver.executeScript("arguments[0].scrollTo(arguments[0].scrollHeight;)", element);
             
         
                     try {
                         // Get the job title
-                        let titleElement =  driver.findElement(By.css('.job-details-jobs-unified-top-card__job-title > h1 > a'));
-                        obj.Title =  titleElement.getText();
+                        let titleElement = await driver.findElement(By.css('.job-details-jobs-unified-top-card__job-title > h1 > a'));
+                        obj.Title = await titleElement.getText();
                     } catch (error) {
                         console.log(error);
                     } finally {
@@ -264,14 +265,14 @@ const scrapePage = async (driver) => {
                     }
         
                     // Wait before moving to the next list item
-                     driver.sleep(1200 + randomDelay);
+                     await driver.sleep(1200 + randomDelay);
                 }
         
             } catch (error) {
                 console.error('Error occurred:', error);
             } finally {
                 console.log(result);
-                 driver.quit();
+                // driver.quit();
             }
         
             return result;
