@@ -4,6 +4,7 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
     event.preventDefault(); // Stop submitting like usual
     const scrapeInput = document.getElementById('scrape-input').value;
     const geoId = document.getElementById('geo-input').value;
+    const pagesNb = document.getElementById('pagesNb').value;
         
 
     fetch('/scrape', {
@@ -11,7 +12,7 @@ document.getElementById('scrape-form').addEventListener('submit', function(event
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ searchTitle : scrapeInput ,geoId})
+        body: JSON.stringify({ searchTitle : scrapeInput ,geoId,pagesNb})
     })
     .then(response => response.text())
     .then(data => {
