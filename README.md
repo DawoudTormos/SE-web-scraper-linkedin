@@ -1,4 +1,4 @@
-A linked Scarper that saves to json files.
+A linkedin Scarper that saves to json files.
 
 Notes:
  - I dealt with signing in with a simple GUI. The app is a node.js express.js server.
