@@ -1,4 +1,4 @@
-A linkedin Scarper that saves to json files.
+A linkedin Scarper for jobs that saves to json files.
 
 Notes:
  - I dealt with signing in with a simple GUI. The app is a node.js express.js server.
@@ -11,7 +11,7 @@ Notes:
 Steps:
  - clone repo
  - have node and npm on your machine
- - npm install
- - node server.js to run the server
- - open localhost:888
+ - CLI: npm install
+ - CLI: node server.js to run the server
+ - open localhost:888 on your browser.
    
